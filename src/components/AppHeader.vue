@@ -5,15 +5,13 @@
         <img src="./../assets/94-946164_graduation-week-graduation-cap-icon-white.png" alt="Graduation Cap Logo" class="img d-inline-block align-top" id="logo"> SiPlanWeb
     </a>
 
-    <disciplinas/>
-    <turmasCursos/>
-
     <div class="page-selection">
-        <div>
-            <h3 @click="goToPage('/turmascursos')">Turmas-Cursos</h3>
-            <h3 @click="goToPage('/disciplinas')">Disciplinas</h3>
-        </div>
-    </div>
+        <select v-model="selectedPage" @change="goToPage(selectedPage)">
+            <option :value="page.path" v-for="page in pages" :key="page.path" :selected="isCurrentPage(page.path)">{{ page.name }}</option>
+          <option value="/disciplinas">Disciplinas</option>
+          <option value="/turmascursos">Turmas-Cursos</option>
+        </select>
+      </div>
 
     <div class="links mr-2">
         <div class="selection">
@@ -52,19 +50,30 @@
 </template>
 
 <script>
-import disciplinas from './../components/AppTable.vue'
-import turmasCursos from './../components/AppTurmasCursos.vue'
+
 
 export default {
     methods: {
         goToPage(page) {
-            this.$router.push(page);
+            if (this.$route.path !== page) {
+                this.$router.push(page);
+            }
+        }, 
+        toggleTableVisibility(path) {
+            if (this.$route.path !== path) {
+                this.$router.push(path);
+        }
+        },
+        changeCursor(cursorType) {
+            document.body.style.cursor = cursorType;
+        },
+        isCurrentPage(pagePath) {
+            return this.$route.path === pagePath;
         }
     },
     components: {
-        disciplinas,
-        turmasCursos
-    }
+
+    },
 }
 </script>
 
@@ -148,7 +157,10 @@ header {
 }
 
 #select-plano {
-    width: 100%;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 15px;
+    text-align: left;
 }
 
 .buttons {
@@ -157,5 +169,9 @@ header {
 
 .links-pages {
 color: #6c1316;
+}
+
+.page-selection {
+    padding: 20px;
 }
 </style>
